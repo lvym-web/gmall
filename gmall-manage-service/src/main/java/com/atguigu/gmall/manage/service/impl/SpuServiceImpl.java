@@ -6,7 +6,11 @@ import com.atguigu.gmall.api.bean.PmsProductInfo;
 import com.atguigu.gmall.api.bean.PmsProductSaleAttr;
 import com.atguigu.gmall.api.bean.PmsProductSaleAttrValue;
 import com.atguigu.gmall.api.service.SpuService;
-import com.atguigu.gmall.manage.mapper.*;
+
+import com.atguigu.gmall.manage.mapper.PmsProductImageMapper;
+import com.atguigu.gmall.manage.mapper.PmsProductInfoMapper;
+import com.atguigu.gmall.manage.mapper.PmsProductSaleAttrMapper;
+import com.atguigu.gmall.manage.mapper.PmsProductSaleAttrValueMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -83,6 +87,13 @@ public class SpuServiceImpl implements SpuService {
         pmsProductImage.setProductId(spuId);
         List<PmsProductImage> productImages = pmsProductImageMapper.select(pmsProductImage);
         return productImages;
+    }
+
+    @Override
+    public List<PmsProductSaleAttr> spuSaleAttrListCheckBySku(String skuId, String productId) {
+
+        List<PmsProductSaleAttr> spuSaleAttrListCheckBySku=pmsProductSaleAttrMapper.spuSaleAttrListCheckBySku(skuId,productId);
+        return spuSaleAttrListCheckBySku;
     }
 
 
