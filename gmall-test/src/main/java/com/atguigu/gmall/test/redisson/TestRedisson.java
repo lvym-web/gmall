@@ -1,6 +1,6 @@
 package com.atguigu.gmall.test.redisson;
 
-import com.atguigu.gmall.util.RedisUtil;
+import com.atguigu.gmall.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;

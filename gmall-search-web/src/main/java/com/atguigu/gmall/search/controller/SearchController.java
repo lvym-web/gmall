@@ -1,6 +1,7 @@
 package com.atguigu.gmall.search.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.atguigu.gmall.annotations.LoginRequired;
 import com.atguigu.gmall.api.bean.*;
 import com.atguigu.gmall.api.service.AttrService;
 import com.atguigu.gmall.api.service.SearchService;
@@ -72,7 +73,6 @@ public class SearchController {
             }
             modelMap.put("attrValueSelectedList", pmsSearchCrumbs);
         }
-
 
 
         String urlParam = getUrlParam(pmsSearchParam);
@@ -150,6 +150,7 @@ public class SearchController {
     }
 
     @RequestMapping("index")
+    @LoginRequired(loginSuccess = false)
     public String index() {
         return "index";
     }

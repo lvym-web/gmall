@@ -5,7 +5,7 @@ import com.atguigu.gmall.api.bean.PmsProductImage;
 import com.atguigu.gmall.api.bean.PmsProductInfo;
 import com.atguigu.gmall.api.bean.PmsProductSaleAttr;
 import com.atguigu.gmall.api.service.SpuService;
-import com.atguigu.gmall.util.PmsUploadUtil;
+import com.atguigu.gmall.PmsUploadUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

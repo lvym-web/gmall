@@ -11,11 +11,13 @@ import com.atguigu.gmall.manage.mapper.PmsSkuAttrValueMapper;
 import com.atguigu.gmall.manage.mapper.PmsSkuImageMapper;
 import com.atguigu.gmall.manage.mapper.PmsSkuInfoMapper;
 import com.atguigu.gmall.manage.mapper.PmsSkuSaleAttrValueMapper;
-import com.atguigu.gmall.util.RedisUtil;
+import com.atguigu.gmall.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -125,10 +127,14 @@ public class SkuServiceImpl implements SkuService {
                 System.out.println("ip为"+remoteAddr+"的帅哥美女"+Thread.currentThread().getName()+"释放锁");
                 //释放锁  根据key匹配vulue，匹配上了就删除锁（防止误删其他线程的锁）
 
-                String lockToken = jedis.get("sku:" + skuId + ":lock");
-                if(StringUtils.isNotBlank(lockToken)&&lockToken.equals(token)){
-                    jedis.del("sku:" + skuId + ":lock");
-                }
+                  String lockToken = jedis.get("sku:" + skuId + ":lock");
+//                if(StringUtils.isNotBlank(lockToken)&&lockToken.equals(token)){
+//                    jedis.del("sku:" + skuId + ":lock");
+//                }
+                //对比防重删令牌 lua
+                String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+                  jedis.eval(script, Collections.singletonList(lockToken),
+                        Collections.singletonList(token));
 
 
 
@@ -176,5 +182,21 @@ public class SkuServiceImpl implements SkuService {
     public List<PmsSkuInfo> getSkuSaleAttrValueListBySpuId(String productId) {
         List<PmsSkuInfo> pmsSkuInfos= pmsSkuInfoMapper.selectSkuSaleAttrValueListBySpuId(productId);
         return pmsSkuInfos;
+    }
+    //验价
+    @Override
+    public boolean checkPrice(String productSkuId, BigDecimal price) {
+        boolean check=false;
+
+        PmsSkuInfo pmsSkuInfo=new PmsSkuInfo();
+        pmsSkuInfo.setId(productSkuId);
+
+        List<PmsSkuInfo> pmsSkuInfos = pmsSkuInfoMapper.select(pmsSkuInfo);
+        for (PmsSkuInfo skuInfo : pmsSkuInfos) {
+            if (skuInfo.getPrice().compareTo(price)==0){
+                check=true;
+            }
+        }
+        return check;
     }
 }
