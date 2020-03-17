@@ -49,9 +49,19 @@ public class CartController {
         }else {
             String cartListCookie = CookieUtil.getCookieValue(request, "cartListCookie", true);
             List<OmsCartItem> omsCartItems = JSON.parseArray(cartListCookie, OmsCartItem.class);
-            modelMap.put("cartList", omsCartItems);
-          BigDecimal bigDecimal = getTotalAmount(omsCartItems);
+
+            List<OmsCartItem> cartItems=new ArrayList<>();
+            for (OmsCartItem cartItem : omsCartItems) {
+                cartItem.setIsChecked(isChecked);
+               cartItems=new ArrayList<>();
+                cartItems.add(cartItem);
+            }
+
+
+            modelMap.put("cartList", cartItems);
+            BigDecimal bigDecimal = getTotalAmount(cartItems);
             modelMap.put("totalAmount", bigDecimal);
+
         }
 
         //获取总价
@@ -127,6 +137,7 @@ public class CartController {
         omsCartItem.setProductSkuCode("11111111111");
         omsCartItem.setProductSkuId(skuId);
         omsCartItem.setQuantity(new BigDecimal(quantity));
+        omsCartItem.setTotalPrice(pmsSkuInfo.getPrice().multiply(BigDecimal.valueOf(quantity)));
 
         //
         String memberId = (String) request.getAttribute("memberId");
@@ -147,6 +158,7 @@ public class CartController {
                     for (OmsCartItem cartItem : omsCartItems) {
                         if (cartItem.getProductId().equals(omsCartItem.getProductId())) {
                             cartItem.setQuantity(cartItem.getQuantity().add(omsCartItem.getQuantity()));
+                            cartItem.setTotalPrice(cartItem.getPrice().multiply(cartItem.getQuantity()));
                         }
                     }
                 } else {

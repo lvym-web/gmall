@@ -5,6 +5,7 @@ import com.atguigu.gmall.annotations.LoginRequired;
 import com.atguigu.gmall.api.bean.*;
 import com.atguigu.gmall.api.service.AttrService;
 import com.atguigu.gmall.api.service.SearchService;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,7 +25,7 @@ public class SearchController {
     AttrService attrService;
 
     @RequestMapping("list.html")
-    public String list(PmsSearchParam pmsSearchParam, ModelMap modelMap) {// 三级分类id、关键字、
+    public String list(PmsSearchParam pmsSearchParam, ModelMap modelMap, HttpServletRequest request) {// 三级分类id、关键字、
 
         // 调用搜索服务，返回搜索结果
         List<PmsSearchSkuInfo> pmsSearchSkuInfos = searchService.getSearchList(pmsSearchParam);
@@ -39,9 +40,17 @@ public class SearchController {
                 valueIdSet.add(valueId);
             }
         }
-        // 根据valueId将属性列表查询出来
-        List<PmsBaseAttrInfo> pmsBaseAttrInfos = attrService.getAttrValueListByValueId(valueIdSet);
-        modelMap.put("attrList", pmsBaseAttrInfos);
+        List<PmsBaseAttrInfo> pmsBaseAttrInfos =null;
+        if(valueIdSet!=null){
+            // 根据valueId将属性列表查询出来
+            pmsBaseAttrInfos = attrService.getAttrValueListByValueId(valueIdSet);
+            modelMap.put("attrList", pmsBaseAttrInfos);
+        }else {
+
+            modelMap.put("url",request.getRequestURL());
+            return "error";
+        }
+
 
         // 对平台属性集合进一步处理，去掉当前条件中valueId所在的属性组
         String[] delValueIds = pmsSearchParam.getValueId();
