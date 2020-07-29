@@ -43,7 +43,7 @@ public class PmsUploadUtil {
 
             // 获得文件后缀名
             String originalFilename = multipartFile.getOriginalFilename();// a.jpg
-            System.out.println(originalFilename);
+
             int i = originalFilename.lastIndexOf(".");
             String extName = originalFilename.substring(i+1);
 

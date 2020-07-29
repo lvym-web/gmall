@@ -99,7 +99,7 @@ public class PayMentController {
         try {
 
             alipayResponse = alipayClient.pageExecute(alipayRequest).getBody();
-            System.out.println(alipayResponse);
+
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }

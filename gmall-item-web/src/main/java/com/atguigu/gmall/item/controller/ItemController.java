@@ -38,7 +38,7 @@ public class ItemController {
         modelMap.put("spuSaleAttrListCheckBySku",pmsProductSaleAttrs);
         // 查询当前sku的spu的其他sku的集合的hash表
         List<PmsSkuInfo> pmsSkuInfos=skuService.getSkuSaleAttrValueListBySpuId(pmsSkuInfo.getProductId());
-
+    // 用hashmap是因为他存储块取快，也因为这里需要  <k,v>型
         HashMap<String, String> hashMap = new HashMap<>();
         for (PmsSkuInfo skuInfo : pmsSkuInfos) {
             String k="";

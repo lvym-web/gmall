@@ -60,7 +60,9 @@ public class CartServiceImpl implements CartService {
         List<OmsCartItem> select = omsCartItemMapper.select(omsCartItem);
         //同步redis
         Jedis jedis = redisUtil.getJedis();
-        //
+
+
+
         Map<String, String> map = new HashMap<>();
         for (OmsCartItem cartItem : select) {
             cartItem.setTotalPrice(cartItem.getPrice().multiply(cartItem.getQuantity()));
@@ -80,13 +82,14 @@ public class CartServiceImpl implements CartService {
         try {
             jedis = redisUtil.getJedis();
             List<String> hvals = jedis.hvals("user:" + memberId + ":cart");
+
             for (String hval : hvals) {
                 OmsCartItem omsCartItem = JSON.parseObject(hval, OmsCartItem.class);
                 omsCartItems.add(omsCartItem);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+
         } finally {
             jedis.close();
         }

@@ -86,7 +86,7 @@ public class OrderServiceImpl implements OrderService {
             Long eval = (Long) jedis.eval(script, Collections.singletonList(tradeKey), Collections.singletonList(tradeCode));
 
             if (eval != null && eval != 0) {
-                jedis.del(tradeKey);
+              //  jedis.del(tradeKey);
                 return "success";
             } else {
                 return "fail";
